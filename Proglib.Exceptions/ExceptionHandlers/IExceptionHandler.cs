@@ -1,4 +1,6 @@
-﻿namespace Proglib.Exceptions
+﻿using Proglib.Exceptions.Commands;
+
+namespace Proglib.Exceptions.ExceptionHandlers
 {
     public interface IExceptionHandler
     {

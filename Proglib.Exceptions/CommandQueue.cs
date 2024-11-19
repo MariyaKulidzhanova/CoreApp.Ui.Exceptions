@@ -1,4 +1,7 @@
-﻿namespace Proglib.Exceptions
+﻿using Proglib.Exceptions.Commands;
+using Proglib.Exceptions.ExceptionHandlers;
+
+namespace Proglib.Exceptions
 {
     public class CommandQueue
     {

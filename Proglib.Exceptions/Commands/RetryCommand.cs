@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Proglib.Exceptions
+namespace Proglib.Exceptions.Commands
 {
     public class RetryCommand : ICommand
     {

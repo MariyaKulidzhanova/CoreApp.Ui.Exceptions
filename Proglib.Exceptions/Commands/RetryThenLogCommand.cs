@@ -1,4 +1,4 @@
-﻿namespace Proglib.Exceptions
+﻿namespace Proglib.Exceptions.Commands
 {
     public class RetryThenLogCommand : ICommand
     {
