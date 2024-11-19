@@ -3,6 +3,12 @@
     public class CommandQueue
     {
         private Queue<ICommand> _commands = new Queue<ICommand>();
+        private readonly IExceptionHandler _exceptionHandler;
+
+        public CommandQueue(IExceptionHandler exceptionHandler)
+        {
+            _exceptionHandler = exceptionHandler;
+        }
 
         public void Enqueue(ICommand command)
         {
@@ -20,7 +26,7 @@
                 }
                 catch (Exception ex)
                 {
-                    //LogExceptionHandler.Handle(command, ex);
+                    _exceptionHandler.Handle(command, ex);
                 }
             }
         }
