@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Proglib.Exceptions
+﻿namespace Proglib.Exceptions
 {
     public class CommandQueue
     {
@@ -26,7 +20,7 @@ namespace Proglib.Exceptions
                 }
                 catch (Exception ex)
                 {
-                    //handle base exception
+                    //LogExceptionHandler.Handle(command, ex);
                 }
             }
         }
