@@ -39,6 +39,7 @@ namespace Proglib.Exceptions.Commands
                 else
                 {
                     _commandQueue.Enqueue(new LogCommand(ex, _logExceptionHandler));
+                    throw;
                 }
             }
         }
