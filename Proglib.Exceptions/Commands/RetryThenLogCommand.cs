@@ -9,10 +9,12 @@ namespace Proglib.Exceptions.Commands
         private readonly int _maxRetries;
         private readonly IExceptionHandler _logExceptionHandler;
         private int _attempts;
+        private readonly LogCommand _logCommand;
 
         public RetryTwiceThenLogCommand(ICommand command,
                                         Queue<ICommand> commandQueue,
                                         IExceptionHandler logExceptionHandler,
+                                        LogCommand logCommand,
                                         int maxRetries = 2)
         {
             _command = command;
@@ -20,6 +22,7 @@ namespace Proglib.Exceptions.Commands
             _logExceptionHandler = logExceptionHandler;
             _maxRetries = maxRetries;
             _attempts = 0;
+            _logCommand = logCommand;
         }
 
         public void Execute()
@@ -34,11 +37,12 @@ namespace Proglib.Exceptions.Commands
                 if (_attempts < _maxRetries)
                 {
                     _commandQueue.Enqueue(new RetryTwiceThenLogCommand(_command, _commandQueue, _logExceptionHandler,
+                                                                       _logCommand,
                                                                        _maxRetries));
                 }
                 else
                 {
-                    _commandQueue.Enqueue(new LogCommand(ex, _logExceptionHandler));
+                    _commandQueue.Enqueue(_logCommand);
                     throw;
                 }
             }
