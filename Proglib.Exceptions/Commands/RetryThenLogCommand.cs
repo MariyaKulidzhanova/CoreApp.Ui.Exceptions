@@ -1,35 +1,51 @@
-﻿namespace Proglib.Exceptions.Commands
+﻿using Proglib.Exceptions.ExceptionHandlers;
+
+namespace Proglib.Exceptions.Commands
 {
-    public class RetryThenLogCommand : ICommand
+    public class RetryTwiceThenLogCommand : ICommand
     {
         private readonly ICommand _command;
+        private readonly Queue<ICommand> _commandQueue;
         private readonly int _maxRetries;
+        private readonly IExceptionHandler _logExceptionHandler;
+        private int _attempts;
 
-        public RetryThenLogCommand(ICommand command, int maxRetries = 2)
+        public RetryTwiceThenLogCommand(ICommand command,
+                                        Queue<ICommand> commandQueue,
+                                        IExceptionHandler logExceptionHandler,
+                                        int maxRetries = 2)
         {
             _command = command;
+            _commandQueue = commandQueue;
+            _logExceptionHandler = logExceptionHandler;
             _maxRetries = maxRetries;
+            _attempts = 0;
         }
 
         public void Execute()
         {
-            int attempts = 0;
-            while (attempts < _maxRetries)
+            try
             {
-                try
+                _attempts++;
+                _command.Execute();
+            }
+            catch (Exception ex)
+            {
+                if (_attempts < _maxRetries)
                 {
-                    _command.Execute();
-                    return;
+                    _commandQueue.Enqueue(new RetryTwiceThenLogCommand(_command, _commandQueue, _logExceptionHandler,
+                                                                       _maxRetries));
                 }
-                catch
+                else
                 {
-                    attempts++;
-                    if (attempts == _maxRetries)
-                    {
-                        throw new InvalidOperationException($"Command failed after {attempts} retries.");
-                    }
+                    _commandQueue.Enqueue(new LogCommand(ex, _logExceptionHandler));
                 }
             }
+        }
+
+        public IExceptionHandler GetExceptionHandler()
+        {
+            return new RetryThenLogExceptionHandler(_commandQueue, _logExceptionHandler);
         }
     }
 }

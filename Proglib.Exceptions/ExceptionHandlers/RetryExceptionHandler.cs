@@ -11,10 +11,9 @@ namespace Proglib.Exceptions.ExceptionHandlers
             _commandQueue = commandQueue;
         }
 
-        public void Handle(ICommand failedCommand, Exception ex)
+        public void Handle(Exception ex, ICommand command)
         {
-            var retryCommand = new RetryCommand(failedCommand, 2);
-            _commandQueue.Enqueue(retryCommand);
+            _commandQueue.Enqueue(new RetryCommand(command, 2, this));
         }
     }
 }

@@ -1,18 +1,26 @@
-﻿namespace Proglib.Exceptions.Commands
+﻿using Proglib.Exceptions.ExceptionHandlers;
+
+namespace Proglib.Exceptions.Commands
 {
     public class LogCommand : ICommand
     {
         private readonly Exception _exception;
+        private readonly IExceptionHandler _exceptionHandler;
 
-        public LogCommand(Exception exception)
+        public LogCommand(Exception exception, IExceptionHandler exceptionHandler)
         {
             _exception = exception;
+            _exceptionHandler = exceptionHandler;
         }
 
         public void Execute()
         {
             Console.WriteLine($"Logging exception: {_exception.Message}");
-            // Реализовать логирование в файл или базу данных
+        }
+
+        public IExceptionHandler GetExceptionHandler()
+        {
+            return _exceptionHandler;
         }
     }
 }

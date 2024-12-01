@@ -5,19 +5,17 @@ namespace Proglib.Exceptions.ExceptionHandlers
     public class RetryThenLogExceptionHandler : IExceptionHandler
     {
         private readonly Queue<ICommand> _commandQueue;
+        private readonly IExceptionHandler _logExceptionHandler;
 
-        public RetryThenLogExceptionHandler(Queue<ICommand> commandQueue)
+        public RetryThenLogExceptionHandler(Queue<ICommand> commandQueue, IExceptionHandler logExceptionHandler)
         {
             _commandQueue = commandQueue;
+            _logExceptionHandler = logExceptionHandler;
         }
 
-        public void Handle(ICommand failedCommand, Exception ex)
+        public void Handle(Exception ex, ICommand failedCommand)
         {
-            var retryThenLogCommand = new RetryThenLogCommand(failedCommand);
-            _commandQueue.Enqueue(retryThenLogCommand);
-
-            var logCommand = new LogCommand(ex);
-            _commandQueue.Enqueue(logCommand);
+            _commandQueue.Enqueue(new RetryTwiceThenLogCommand(failedCommand, _commandQueue, _logExceptionHandler));
         }
     }
 }

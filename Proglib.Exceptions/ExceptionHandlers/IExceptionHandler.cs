@@ -4,6 +4,6 @@ namespace Proglib.Exceptions.ExceptionHandlers
 {
     public interface IExceptionHandler
     {
-        void Handle(ICommand command, Exception exception);
+        void Handle(Exception exception, ICommand command);
     }
 }

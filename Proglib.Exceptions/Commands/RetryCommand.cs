@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Proglib.Exceptions.ExceptionHandlers;
 
 namespace Proglib.Exceptions.Commands
 {
@@ -10,11 +6,13 @@ namespace Proglib.Exceptions.Commands
     {
         private readonly ICommand _command;
         private readonly int _retryCount;
+        private readonly IExceptionHandler _exceptionHandler;
 
-        public RetryCommand(ICommand command, int retryCount)
+        public RetryCommand(ICommand command, int retryCount, IExceptionHandler exceptionHandler)
         {
             _command = command;
             _retryCount = retryCount;
+            _exceptionHandler = exceptionHandler;
         }
 
         public void Execute()
@@ -36,6 +34,11 @@ namespace Proglib.Exceptions.Commands
                     }
                 }
             }
+        }
+
+        public IExceptionHandler GetExceptionHandler()
+        {
+            return _exceptionHandler;
         }
     }
 }
